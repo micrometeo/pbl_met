@@ -631,24 +631,24 @@ module pbl_met
         ! Input section (data entering here through SonicData % averages(...) member function
         real(8), dimension(:,:), allocatable, private         :: rmVel              ! Time series of mean velocities (m/s)
         real(8), dimension(:), allocatable, private           :: rvScalarVel        ! Time series of horizontal scalar wind speed (m/s)
-        real(8), dimension(:), allocatable, private           :: rvT                ! Time series of mean temperatures (�C)
+        real(8), dimension(:), allocatable, private           :: rvT                ! Time series of mean temperatures (°C)
         real(8), dimension(:), allocatable, private           :: rvQ                ! Time series of mean water concentration (mmol/mol)
         real(8), dimension(:), allocatable, private           :: rvC                ! Time series of mean carbon dioxide concentrations (mmol/mol)
         real(8), dimension(:,:,:), allocatable, private       :: raCovVel           ! Time series of momentum covariances (m2/s2)
-        real(8), dimension(:,:), allocatable, private         :: rmCovT             ! Time series of covariances between velocities and temperature (m°C/s)
-        real(8), dimension(:), allocatable, private           :: rvVarT             ! Time series of temperature variances (°C2)
+        real(8), dimension(:,:), allocatable, private         :: rmCovT             ! Time series of covariances between velocities and temperature (mÂ°C/s)
+        real(8), dimension(:), allocatable, private           :: rvVarT             ! Time series of temperature variances (Â°C2)
         real(8), dimension(:,:), allocatable, private         :: rmCovQ             ! Time series of covariances between velocities and water (m mmol/mol s)
         real(8), dimension(:), allocatable, private           :: rvVarQ             ! Time series of water variances (mmol2/mol2)
         real(8), dimension(:,:), allocatable, private         :: rmCovC             ! Time series of covariances between velocities and carbon dioxide (m mmol/mol s)
         real(8), dimension(:), allocatable, private           :: rvVarC             ! Time series of carbon dioxide variances (mmol2/mol2)
         ! Output section (data entering here through EddyCovData % process(...) member function
         ! 1) Basic, rotated
-        real(8), dimension(:), allocatable, private           :: rvTheta            ! Time series of first rotation angles (°)
-        real(8), dimension(:), allocatable, private           :: rvPhi              ! Time series of second rotation angles (°)
-        real(8), dimension(:), allocatable, private           :: rvPsi              ! Time series of third rotation angles (°) (always 0 if two rotations selected in eddy covariance)
+        real(8), dimension(:), allocatable, private           :: rvTheta            ! Time series of first rotation angles (Â°)
+        real(8), dimension(:), allocatable, private           :: rvPhi              ! Time series of second rotation angles (Â°)
+        real(8), dimension(:), allocatable, private           :: rvPsi              ! Time series of third rotation angles (Â°) (always 0 if two rotations selected in eddy covariance)
         real(8), dimension(:,:), allocatable, private         :: rmRotVel           ! Time series of rotated mean velocities (m/s)
         real(8), dimension(:,:,:), allocatable, private       :: raRotCovVel        ! Time series of rotated momentum covariances (m2/s2)
-        real(8), dimension(:,:), allocatable, private         :: rmRotCovT          ! Time series of rotated covariances between velocities and temperature (m°C/s)
+        real(8), dimension(:,:), allocatable, private         :: rmRotCovT          ! Time series of rotated covariances between velocities and temperature (mÂ°C/s)
         real(8), dimension(:,:), allocatable, private         :: rmRotCovQ          ! Time series of rotated covariances between velocities and water (m mmol/mol s)
         real(8), dimension(:,:), allocatable, private         :: rmRotCovC          ! Time series of rotated covariances between velocities and carbon dioxide (m mmol/mol s)
         ! 2) Derived, precision anemometry
@@ -4902,7 +4902,7 @@ contains
     ! Clausius-Clapeyron formula. This routine is the recommended
     ! replacement of E_SAT.
     !
-    !     Input: T = air temperature (∞C)
+    !     Input: T = air temperature (âC)
     !
     !     Output: ESAT = saturation vapor pression (hPa)
     !
@@ -4949,7 +4949,7 @@ contains
 
 
     ! Compute the derivative of the saturation vapor pressure multiplied
-    ! by P/0.622; the input temperature is in ∞K.
+    ! by P/0.622; the input temperature is in âK.
     FUNCTION D_E_SAT(T) RESULT(DEsat)
 
         ! Routine arguments
@@ -5140,7 +5140,7 @@ contains
     function LatentVaporizationHeat(rTemp, iCalculationType) result(rLambda)
 
         ! Routine arguments
-        real, intent(in)    :: rTemp            ! (°C)
+        real, intent(in)    :: rTemp            ! (Â°C)
         integer, intent(in)    :: iCalculationType    ! ASCE_STANDARDEQ, ASCE_MEANTEMPERATURE
         real                :: rLambda            ! (W/m2)
 
@@ -5260,7 +5260,7 @@ contains
     ! Motivations and whys - I've chosen a two-staged approach in which first is
     ! ====================   bisection because this algorithm is sturdy, although
     !                        inefficient. As "Delta" is a monotonically increasing
-    ! function, but with one essential discontinuity at 0 °C (just where we need it
+    ! function, but with one essential discontinuity at 0 Â°C (just where we need it
     ! the most) I preferred this approach to bracket the solution to a tiny interval
     ! so that the chance of finding adverse effects due to the discontinuity are
     ! minimized. Once the search interval is well reduced
@@ -5314,7 +5314,7 @@ contains
 
         ! Routine arguments
         real, intent(in)    :: rZ                ! Altitude at which pressure is desired (m above msl)
-        real, intent(in)    :: rTemp            ! Air temperature (°C)
+        real, intent(in)    :: rTemp            ! Air temperature (Â°C)
         real, intent(in)    :: rZr                ! Height at which temperature measurements are taken (m)
         integer, intent(in)    :: iCalculationType    ! ASCE_STANDARDATMOSPHERE, ASCE_STANDARDEQ, ASCE_MEANTEMPERATURE
         real                :: rPk                ! Estimated pressure (hPa)
@@ -5353,10 +5353,10 @@ contains
         implicit none
 
         ! Routine arguments
-        real, intent(in)    :: Temp        ! (°C)
+        real, intent(in)    :: Temp        ! (Â°C)
         real, intent(in)    :: ea        ! (hPa)
         real, intent(in)    :: P        ! (hPa)
-        real                :: Tv        ! (°C)
+        real                :: Tv        ! (Â°C)
 
         ! Locals
         ! -none-
@@ -5382,7 +5382,7 @@ contains
         REAL, PARAMETER    :: d = 234.5
         REAL        :: T, G
 
-        ! Convert temperature to °C (all relations we use assume Celsius degrees)
+        ! Convert temperature to Â°C (all relations we use assume Celsius degrees)
         ! and then obtain dew point temperature
         T  = Td - 273.15
         G  = LOG(Ur/100.0*EXP((b-T/d)*(T/(c+T))))
@@ -5455,7 +5455,7 @@ contains
 
         ! Routine arguments
         real, intent(in)    :: C        ! Cloud cover fraction (0 to 1)
-        real, intent(in)    :: sinPsi    ! Sine of solar elevation angle (° above horizon; negative below)
+        real, intent(in)    :: sinPsi    ! Sine of solar elevation angle (Â° above horizon; negative below)
         real                :: Rg        ! Estimate of the global solar radiation (W/m2)1-0.75
 
         ! Locals
@@ -5542,7 +5542,7 @@ contains
                                             !   5: Forests, prairies, irrigated coltures
                                             !   6: Water bodies
         real, intent(in)    :: albedo        ! Albedo coefficient
-        real, intent(in)    :: Td            ! Dry bulb (ordinary) temperature (°C)
+        real, intent(in)    :: Td            ! Dry bulb (ordinary) temperature (Â°C)
         real, intent(in)    :: Rg            ! Global radiation (W/m2)
         real, intent(in)    :: C            ! Cloud cover fraction (0 to 1)
         real, intent(in)    :: z0            ! Aerodynamic roughness length (m)
@@ -5605,7 +5605,7 @@ contains
     function BruntVaisala(Td, z) result(N)
 
         ! Routine arguments
-        real, intent(in)    :: Td    ! Virtual temperature (°C)
+        real, intent(in)    :: Td    ! Virtual temperature (Â°C)
         real, intent(in)    :: z    ! Height above ground level (m)
         real                :: N    ! Brunt-Vaisala frequency (Hz)
 
@@ -5631,14 +5631,14 @@ contains
     !    z0_in        : Aerodynamic surface roughness (real, m)
     !    zr            : Anemometer height above ground (real, m)
     !    Vel            : Horizontal wind speed (real, m/s)
-    !    T            : Air temperature (real, °C)
+    !    T            : Air temperature (real, Â°C)
     !    Rn            : Net radiation (real, W/m2)
     !    N            : Cloud cover fraction (real, 0.0 to 1.0)
     !
     ! Output:
     !
     !    u_star        : Friction velocity (real, m/s)
-    !    T_star        : Scale temperature (real, °C)
+    !    T_star        : Scale temperature (real, Â°C)
     !    H0            : Turbulent sensible heat flux (real, W/m2)
     !    hlm1        : Stability parameter (= zr/L, with L the Obukhov length) (real, dimensionless)
     !
@@ -5787,7 +5787,7 @@ contains
     !
     ! This latter is an equation in "Tw", whose solution is the desired wet bulb
     ! temperature. Monotonicity with respect to "Tw" then guarantees the solution
-    ! uniqueness (not its existence, however: ESAT(T) has a discontinuity at 0 °C
+    ! uniqueness (not its existence, however: ESAT(T) has a discontinuity at 0 Â°C
     ! at which existence cannot be ensured a priori).
     !
     ! The left member of equation (2) can be considered a function in "Tw", whose
@@ -5987,7 +5987,7 @@ contains
 
         ! Routine arguments
         real, intent(in)    :: Pres        ! Air pressure (hPa)
-        real, intent(in)    :: Temp        ! Air temperature (°C)
+        real, intent(in)    :: Temp        ! Air temperature (Â°C)
         real, intent(in)    :: Vel        ! Wind speed (m / s)
         real, intent(in)    :: Rn        ! Net radiation (W / m2)
         real, intent(in)    :: G        ! Ground heat flux (W / m2)
@@ -5999,7 +5999,7 @@ contains
 
         ! Locals
         real    :: Delta    ! Slope (first derivative) of saturation vapor pressure relation
-        real    :: gam        ! Psychrometric constant (kPa / °C)
+        real    :: gam        ! Psychrometric constant (kPa / Â°C)
         real    :: Vel2        ! Wind speed at 2 m above ground
         real    :: h        ! Vegetation height (m)
         real    :: d        ! Displacement height (m)
@@ -13425,7 +13425,7 @@ contains
     function ClassDirScalar(dir, iNumClasses, iClassType) result(iClass)
 
         ! Routine arguments
-        real, intent(in)                :: dir                ! Wind direction to classify (°)
+        real, intent(in)                :: dir                ! Wind direction to classify (Â°)
         integer, intent(in)                :: iNumClasses        ! Number of desired classes
         integer, intent(in), optional    :: iClassType        ! Class type (WDCLASS_ZERO_CENTERED (default): first class is zero-centered; WDCLASS_ZERO_BASED: first class starts at zero)
         integer                            :: iClass            ! Direction class to which the wind belongs (-9999 if no class is assignable)
@@ -13470,7 +13470,7 @@ contains
     function ClassDirVector(dir, iNumClasses, iClassType) result(ivClass)
 
         ! Routine arguments
-        real, dimension(:), intent(in)    :: dir                ! Wind direction to classify (°)
+        real, dimension(:), intent(in)    :: dir                ! Wind direction to classify (Â°)
         integer, intent(in)                :: iNumClasses        ! Number of desired classes
         integer, intent(in), optional    :: iClassType        ! Class type (WDCLASS_ZERO_CENTERED (default): first class is zero-centered; WDCLASS_ZERO_BASED: first class starts at zero)
         integer, dimension(size(dir))    :: ivClass            ! Direction class to which the wind belongs (-9999 if no class is assignable)
@@ -13634,7 +13634,7 @@ contains
 
         ! Routine arguments
         real, dimension(:), intent(in)                    :: vel            ! Wind speed observations (m/s)
-        real, dimension(:), intent(in)                    :: dir            ! Wind direction observations (°)
+        real, dimension(:), intent(in)                    :: dir            ! Wind direction observations (Â°)
         real, dimension(:), intent(in)                    :: rvVel        ! Wind speed class limits as in ClassVel (m/s)
         integer, intent(in)                                :: iNumClasses    ! Number of direction classes as in ClassDir
         integer, intent(in), optional                    :: iClassType    ! Type of direction classes as in ClassDir (WDCLASS_ZERO_CENTERED (default), or WDCLASS_ZERO_BASED)
@@ -13712,9 +13712,9 @@ contains
 
         ! Routine arguments
         real, dimension(:), intent(in)                    :: vel1                    ! First wind speed observations (m/s)
-        real, dimension(:), intent(in)                    :: dir1                    ! First wind direction observations (°)
+        real, dimension(:), intent(in)                    :: dir1                    ! First wind direction observations (Â°)
         real, dimension(:), intent(in)                    :: vel2                    ! Second wind speed observations (m/s)
-        real, dimension(:), intent(in)                    :: dir2                    ! Second wind direction observations (°)
+        real, dimension(:), intent(in)                    :: dir2                    ! Second wind direction observations (Â°)
         real, dimension(:), intent(in)                    :: rvVel                ! Wind speed class limits as in ClassVel (m/s)
         integer, intent(in)                                :: iNumClasses            ! Number of direction classes as in ClassDir
         integer, intent(in), optional                    :: iClassType            ! Type of direction classes as in ClassDir (WDCLASS_ZERO_CENTERED (default), or WDCLASS_ZERO_BASED)
@@ -13789,7 +13789,7 @@ contains
 
         ! Routine arguments
         real, dimension(:), intent(in)                    :: vel            ! Wind speed observations (m/s)
-        real, dimension(:), intent(in)                    :: dir            ! Wind direction observations (°)
+        real, dimension(:), intent(in)                    :: dir            ! Wind direction observations (Â°)
         real, dimension(:), intent(in)                    :: scalar        ! Any scalar quantity (any unit; invalid values as NaN)
         real, dimension(:), intent(in)                    :: rvVel        ! Wind speed class limits as in ClassVel (m/s)
         integer, intent(in)                                :: iNumClasses    ! Number f direction classes as in ClassDir
@@ -13890,7 +13890,7 @@ contains
     function DirMean(dir, scalar, iNumClasses, iClassType) result(rvMean)
 
         ! Routine arguments
-        real, dimension(:), intent(in)    :: dir            ! Wind direction observations (°)
+        real, dimension(:), intent(in)    :: dir            ! Wind direction observations (Â°)
         real, dimension(:), intent(in)    :: scalar        ! Any scalar quantity (any unit; invalid values as NaN)
         integer, intent(in)                :: iNumClasses    ! Number f direction classes as in ClassDir
         integer, intent(in)                :: iClassType    ! Type of direction classes as in ClassDir
@@ -13936,7 +13936,7 @@ contains
         real, dimension(:), intent(in)              :: rvU            ! Eastward wind component (m/s)
         real, dimension(:), intent(in)              :: rvV            ! Northward wind component (m/s)
         real, dimension(:), intent(in)              :: rvW            ! Verticalward wind component (m/s)
-        real, dimension(:), intent(in)              :: rvT            ! Sonic temperature (°C)
+        real, dimension(:), intent(in)              :: rvT            ! Sonic temperature (Â°C)
         real, dimension(:), intent(in), optional    :: rvQ            ! Water vapor (mmol/mol)
         real, dimension(:), intent(in), optional    :: rvC            ! Carbon dioxide (mmol/mol) (if present, also water vapor must be present)
         integer                                     :: iRetCode
@@ -14025,7 +14025,7 @@ contains
         real, dimension(:), allocatable, intent(out)            :: rvU            ! Eastward wind component (m/s)
         real, dimension(:), allocatable, intent(out)            :: rvV            ! Northward wind component (m/s)
         real, dimension(:), allocatable, intent(out)            :: rvW            ! Verticalward wind component (m/s)
-        real, dimension(:), allocatable, intent(out)            :: rvT            ! Sonic temperature (°C)
+        real, dimension(:), allocatable, intent(out)            :: rvT            ! Sonic temperature (Â°C)
         real, dimension(:), allocatable, intent(out), optional    :: rvQ            ! Water vapor (mmol/mol)
         real, dimension(:), allocatable, intent(out), optional    :: rvC            ! Carbon dioxide (mmol/mol)
         integer                                                    :: iRetCode
@@ -17815,7 +17815,7 @@ contains
             this % rvH0(i) = RhoCp(real(rvTa(i), kind=4), real(rPa, kind=4)) * wt_cor
 
             ! Latent heat
-            lambda         = 2500.8d0 - 2.36d0 * rvTa(i) + 0.0016d0 * rvTa(i)**2 - 0.00006d0 * rvTa(i)**3    ! Latent condensation heat foe water [J/g] (temperature in °C)
+            lambda         = 2500.8d0 - 2.36d0 * rvTa(i) + 0.0016d0 * rvTa(i)**2 - 0.00006d0 * rvTa(i)**3    ! Latent condensation heat foe water [J/g] (temperature in Â°C)
             this % rvHe(i) = lambda/1000.d0 * this % rvFqMass(i)
 
             ! Carbon dioxide specific processing
@@ -18035,7 +18035,7 @@ contains
         ! Routine arguments
         real, intent(in)    :: Ta    ! Air temperature (K)
         real, intent(in)    :: H0    ! Turbulent sensible heat flux (W/m2)
-        real, intent(in)    :: zi    ! Mixing height (mù
+        real, intent(in)    :: zi    ! Mixing height (mÃ¹
         real                :: ws
         
         ! Locals
@@ -18200,7 +18200,7 @@ contains
         real(8), dimension(:), intent(in)      :: z     ! Heights above ground (m)
         real(8), intent(in)                    :: zr    ! Wind measurement height above ground (m)
         real(8), intent(in)                    :: vr    ! Wind speed (m/s)
-        real(8), intent(in)                    :: dir   ! Wind direction (°)
+        real(8), intent(in)                    :: dir   ! Wind direction (Â°)
         real(8), intent(in)                    :: z0    ! Aerodynamic roughness length (m)
         real(8), intent(in)                    :: hmix  ! Mixing height above ground (m)
         real(8), intent(in)                    :: us    ! Friction velocity (m/s)
@@ -19077,7 +19077,7 @@ contains
         real(8), intent(in)                            :: dtime        ! Time step (s)
         real(8), intent(in)                            :: H0            ! Turbulent sensible heat flux (W/m2)
         real(8), intent(in)                            :: us            ! Friction velocity (m/s)
-        real(8), intent(in)                            :: Temp            ! Temperature (°C)
+        real(8), intent(in)                            :: Temp            ! Temperature (Â°C)
         real(8), intent(in)                            :: rc            ! RhoCp
         real(8), intent(in)                            :: hold            ! Mixing height on previous time step (m)
         integer, intent(in)                            :: n_step        ! Number of sub-steps within a whole step
@@ -19170,7 +19170,7 @@ contains
 
         ! Routine arguments
         real, intent(in)    :: Lat        ! Latitude (degrees)
-        real(8), intent(in)    :: Temp        ! Air temperature (°C)
+        real(8), intent(in)    :: Temp        ! Air temperature (Â°C)
         real(8), intent(in)    :: H0        ! Turbulent sensible heat flux (W/m2)
         real(8), intent(in)    :: Ustar    ! Friction velocity (m/s)
         real(8), intent(in)    :: L        ! Obukhov length (m)
